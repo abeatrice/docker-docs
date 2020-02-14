@@ -86,3 +86,68 @@ $ docker container rm -f $(docker container ls -aq)
 $ docker volume rm $(docker volume ls -q)
 ```
 
+## Using host volumes
+
+Start alpine container with shell and mount subfolder src of current directory to the container at /app/src. Volumes need to use absolute paths
+```
+$ docker container run --rm -it \
+    -v $(pwd)/src:/app/src \
+    alpine:latest /bin/sh
+```
+
+### Make nginx server
+
+Create index.html
+```
+$ echo "hello" > index.html
+```
+
+Create Dockerfile
+```
+FROM nginx:alpine
+COPY . /usr/share/nginx/html
+```
+
+Build the image
+```
+$ docker image build -t my-website:1.0
+```
+
+Run the container with the current directory mounted
+```
+$ docker container run -d \
+    -v $(pwd):/usr/share/nginx/html \
+    -p 80:80 --name my-site \
+    my-website:1.0
+```
+
+Visit localhost, update index.html, refresh localhost, site content changes.
+
+## Define volumes in images
+
+Pull mongo image
+```
+$ docker image pull mongo:3.7
+```
+
+Inspect the image for volumes. 
+```
+$ docker image inspect \
+    --format='{{json .ContainerConfig.Volumes}}' \
+    mongo:3.7 | jq
+```
+
+Run an instance of mongo
+```
+$ docker run --name my-mongo -d mongo:3.7
+```
+
+Inspect container for volumes created. The source field is the path to the host directory where the data produced by the container will be stored.
+```
+$ docker inspect --format '{{json .Mounts}}' my-mongo | jq
+```
+
+
+
+
+

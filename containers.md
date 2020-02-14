@@ -56,15 +56,15 @@ $ docker container inspect <container name>
 
 ## Exec into a running container
 ```
-$ docker containerr exec -i -t <container name> /bin/sh
+$ docker container exec -i -t <container name> /bin/sh
 ```
  - -i run additional process interactively
- - -t prrovide TTY(terminal emulator) for the command
+ - -t provide TTY(terminal emulator) for the command
  - /bin/sh the process to run
 
 ## Attach to a running container
 ```
-$ dockerr container attach <container name>
+$ docker container attach <container name>
 ```
 
 To quit the container without stopping it
